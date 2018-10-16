@@ -1,7 +1,7 @@
 const expect = require('expect');
 const request = require('supertest');
 // Acordarse que el que devuelve que el test anduvo o le fue mal es el done() o el done(error) (pero no siempre que
-// tira error es porque se mando el done(error))
+// tira error es porque se mando el done(error), creo)
 
 
 const { app } = require('./../server');

@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
-const { ObjectID} = require('mongodb');
+const { ObjectID } = require('mongodb');
 
 
 const app = express();
@@ -24,43 +24,63 @@ app.post('/todos', (req, res) => {
 });
 
 
-app.get('/todos', (req, res)=>{
+app.get('/todos', (req, res) => {
 
     Todo.find()
-    .then(todos=>{
-        res.send({todos});
-    })
-    .catch(e=>{
-        res.status(400).send(e);
-    })
+        .then(todos => {
+            res.send({ todos });
+        })
+        .catch(e => {
+            res.status(400).send(e);
+        })
 
 });
 
-app.get('/todos/:id', (req, res)=>{
+app.get('/todos/:id', (req, res) => {
 
     const id = req.params.id
 
-    if(!ObjectID.isValid(id)){
-        return res.status(400).send({error: 'Wrong id'});        
+    if (!ObjectID.isValid(id)) {
+        return res.status(400).send({ error: 'Wrong id' });
     }
 
     Todo.findById(id)
-    .then(todo=>{
+        .then(todo => {
 
-        if(!todo){
-            return res.status(400).send({error: 'Any Todo was found !!'});        
-        }
+            if (!todo) {
+                return res.status(400).send({ error: 'Any Todo was found !!' });
+            }
 
-        res.send({todo});
-    })
-    .catch(e=>{
-        res.status(400).send(e);
-    })
+            res.send({ todo });
+        })
+        .catch(e => {
+            res.status(400).send(e);
+        })
 
 });
 
 
-const PORT = process.env.PORT ||  3002;
+app.delete('/todos/:id', (req, res) => {
+
+    const _id = req.params.id;
+
+    if (!ObjectID.isValid(_id)) {
+        return res.status(400).send({ error: 'Wrong id' });
+    }
+    Todo.findOneAndDelete({_id})
+        .then(resFromDelete => {
+            if(!resFromDelete){
+                return res.status(400).send({ error: 'Any Todo was found !!' });
+            }
+            
+            res.send(resFromDelete);
+        })
+        .catch(e => res.status(400).send(e));
+
+});
+
+
+const PORT = process.env.PORT || 3002;
 
 app.listen(PORT, () => {
     console.log('server is running on port: ' + PORT);
@@ -71,3 +91,7 @@ module.exports = {
     app
 }
 
+
+/**
+ * Configuracion de Heroku:  *Package.json: script start, engines para versiones específicas
+ */

@@ -1,8 +1,8 @@
 const { mongoose } = require('./../server/db/mongoose');
 const { Todo } = require('./../server/models/todo');
-const { ObjectID} = require('mongodb');
+const { ObjectID } = require('mongodb');
 
-let id = '5bc52ce33677b824fd8db5a7';
+let id = '5bc60928c00986cdd54b146c';
 
 console.log(`El id es valido ? ${ObjectID.isValid(id)}`);
 
@@ -22,4 +22,9 @@ Todo.findOne({ _id: id })
 // devuelve un objeto pero solo buscando por id
 Todo.findById(id)
     .then(res => console.log(res))
+    .catch(e => console.log(e));
+
+
+Todo.findByIdAndDelete(id)
+    .then(res => console.log('Delete', res))
     .catch(e => console.log(e));
